@@ -52,6 +52,9 @@ const LoginPage: React.FC = () => {
     <div className="container mx-auto py-10 flex justify-center items-center h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">StockPilot</h1>
+          </div>
           <CardTitle className="text-2xl">Login</CardTitle>
         </CardHeader>
         <CardContent>
