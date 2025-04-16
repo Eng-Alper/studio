@@ -84,6 +84,7 @@ const LoginPage: React.FC = () => {
               <Button type="submit" className="w-full">Login</Button>
             </form>
           </Form>
+          <Button className="w-full mt-2">Register</Button>
         </CardContent>
       </Card>
     </div>
@@ -91,3 +92,5 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+
+    
