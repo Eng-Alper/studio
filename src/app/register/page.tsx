@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -21,9 +20,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from 'next/link';
 
-const loginSchema = z.object({
+const registerSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -32,27 +30,27 @@ const loginSchema = z.object({
   }),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-const LoginPage: React.FC = () => {
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+const RegisterPage: React.FC = () => {
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handleSubmit = (values: LoginFormValues) => {
-    // Handle login logic here (e.g., Firebase Authentication)
-    console.log(values);
+  const handleSubmit = (values: RegisterFormValues) => {
+    // Handle registration logic here (e.g., Firebase Authentication)
+    console.log("Registration values:", values);
   };
 
   return (
     <div className="container mx-auto py-10 flex justify-center items-center h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Register</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -83,18 +81,13 @@ const LoginPage: React.FC = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full">Register</Button>
             </form>
           </Form>
-          <Link href="/register">
-            <Button className="w-full mt-2">Register</Button>
-          </Link>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default LoginPage;
-
-    
+export default RegisterPage;
