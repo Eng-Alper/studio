@@ -38,3 +38,19 @@ yarn-error.log*
 next-env.d.ts
 
 .genkit/*
+<<<<<<< HEAD
+=======
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+node_modules/
+*.zip
+node_modules/
+*.zip
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+>>>>>>> a3e348b (Initial commit - Starting fresh)
