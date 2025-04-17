@@ -18,8 +18,13 @@ const InventoryPage: React.FC = () => {
     { id: "1", name: "Example Item", description: "This is an example item.", stock: 10 },
   ]);
 
-  const handleAddItem = (item: Omit<InventoryItem, 'id'>) => {
-    setInventory([...inventory, { ...item, id: String(Date.now()) }]);
+  const handleAddItem = (values: { name: string; initialStock: number; description?: string }) => {
+    setInventory([...inventory, { 
+      id: String(Date.now()), 
+      name: values.name, 
+      description: values.description, 
+      stock: values.initialStock 
+    }]);
   };
 
   const handleUpdateStock = (id: string, newStock: number) => {
