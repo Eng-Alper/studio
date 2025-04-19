@@ -1,0 +1,114 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  build-and-deploy:
+    name: Build and Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: inventory-app
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Set up Minikube
+        uses: medyagh/setup-minikube@master
+
+      - name: Test Kubernetes deployment locally
+        run: |
+          minikube image load ${{ steps.login-ecr.outputs.registry }}/inventory-app:${{ github.sha }}
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+          kubectl wait --for=condition=available --timeout=60s deployment/inventory-app
+          kubectl delete -f deployment.yaml
+          kubectl delete -f service.yaml
+
+      # Removed AWS EKS steps and replaced with direct Docker deployment
+      - name: Update deployment manifest
+        run: |
+          sed -i "s|engalper/inventory-app:latest|${{ steps.login-ecr.outputs.registry }}/inventory-app:${{ github.sha }}|g" deployment.yaml
+
+      - name: Deploy with Docker and Minikube
+        run: |
+          # Create a deployment directory
+          mkdir -p deployment
+          cp deployment.yaml service.yaml deployment/
+          
+          # Start minikube for production deployment
+          minikube start --profile=prod
+          
+          # Apply Kubernetes configs
+          kubectl --context=prod apply -f deployment/deployment.yaml
+          kubectl --context=prod apply -f deployment/service.yaml
+          
+          # Wait for deployment to be available
+          kubectl --context=prod wait --for=condition=available --timeout=120s deployment/inventory-app
+
+      # Continue with S3 artifact storage
+      - name: Upload build artifacts to S3
+        run: |
+          aws s3 sync .next s3://${{ secrets.S3_BUCKET_NAME }}/app/${{ github.sha }}
+          aws s3 cp deployment.yaml s3://${{ secrets.S3_BUCKET_NAME }}/manifests/${{ github.sha }}/
+          aws s3 cp service.yaml s3://${{ secrets.S3_BUCKET_NAME }}/manifests/${{ github.sha }}/
+
+      - name: Create deployment record
+        run: |
+          echo "Deployment completed at $(date)" > deployment-info.txt
+          echo "Commit SHA: ${{ github.sha }}" >> deployment-info.txt
+          echo "Container: ${{ steps.login-ecr.outputs.registry }}/inventory-app:${{ github.sha }}" >> deployment-info.txt
+          aws s3 cp deployment-info.txt s3://${{ secrets.S3_BUCKET_NAME }}/deployments/${{ github.sha }}.txt

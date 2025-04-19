@@ -1,2 +1,69 @@
 node_modules/@next/swc-linux-x64-gnu/next-swc.linux-x64-gnu.node
 node_modules/@next/swc-linux-x64-musl/next-swc.linux-x64-musl.node
+
+.next/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+.env
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.genkit/*
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+node_modules/
+*.zip
+node_modules/
+*.zip
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+awscliv2.zip
+kubectl
+minikube-linux-amd64
+
+dist
+
+.vscode
+.swc
+.idx
+.genkit
+
+node_modules/
