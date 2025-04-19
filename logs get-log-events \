@@ -1,0 +1,24 @@
+{
+    "logStreams": [
+        {
+            "logStreamName": "2025/04/18/[$LATEST]4bf0d8451af548959b6f0900a247d516",
+            "creationTime": 1745003380099,
+            "firstEventTimestamp": 1745003379796,
+            "lastEventTimestamp": 1745003379991,
+            "lastIngestionTime": 1745003380106,
+            "uploadSequenceToken": "49039859627215789043669276460557153406805759530908875611",
+            "arn": "arn:aws:logs:eu-north-1:051845123320:log-group:/aws/lambda/inventory-api:log-stream:2025/04/18/[$LATEST]4bf0d8451af548959b6f0900a247d516",
+            "storedBytes": 0
+        },
+        {
+            "logStreamName": "2025/04/18/[$LATEST]736874aeb8754b43a78d2aa5ee985eec",
+            "creationTime": 1745003776982,
+            "firstEventTimestamp": 1745003776728,
+            "lastEventTimestamp": 1745003776922,
+            "lastIngestionTime": 1745003776989,
+            "uploadSequenceToken": "49039859627216316591663927565323540309479195747594107882",
+            "arn": "arn:aws:logs:eu-north-1:051845123320:log-group:/aws/lambda/inventory-api:log-stream:2025/04/18/[$LATEST]736874aeb8754b43a78d2aa5ee985eec",
+            "storedBytes": 0
+        }
+    ]
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory-app</title>
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f1f8fe;
+      color: #333;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background: linear-gradient(90deg, #87ceeb, #b0e0e6);
+      color: white;
+    }
+    #networking-image {
+      max-width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: white;
+      margin: 0;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      flex-grow: 1;
+      text-align: center;
+    }
+    #timer {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 20px 0;
+      color: #0d47a1;
+      font-weight: bold;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .product {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .product:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quantity-controls button {
+      padding: 5px 10px;
+      background-color: #3793d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .quantity-controls button:hover {
+      background-color: #2c7abf;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img id="networking-image" src="1.jpeg" alt="Networking Products">
+    <h1>Inventory-app</h1>
+  </header>
+  <div id="timer">Next update in: <span id="countdown"></span></div>
+  <div class="product-grid" id="products"></div>
+
+  <script>
+    const BUCKET_URL = "https://inventory-app-alper.s3.eu-north-1.amazonaws.com/products.json";
+    const EVENTBRIDGE_INTERVAL_MINUTES = 2;
+    let lastUpdatedStock = {};
+
+    // Fetch Product Data
+    async function fetchProducts(forceRefresh = false) {
+      try {
+        const response = await fetch(BUCKET_URL);
+        if (!response.ok) throw new Error("Failed to fetch products.json.");
+
+        const products = await response.json();
+        
+        // Check if stock was updated by EventBridge
+        if (forceRefresh || JSON.stringify(products) !== JSON.stringify(lastUpdatedStock)) {
+          lastUpdatedStock = products; // Cache current state
+          const productsDiv = document.getElementById('products');
+          productsDiv.innerHTML = "";
+
+          products.forEach((product, index) => {
+            const productEl = document.createElement('div');
+            productEl.classList.add('product');
+            productEl.innerHTML = `
+              <strong>${product.name}</strong>
+              <p>${product.description}</p>
+              <p>Stock: <b>${product.stock}</b></p>
+              <div class="quantity-controls">
+                <button onclick="adjustQuantity(${index}, 1)">+</button>
+                <button onclick="adjustQuantity(${index}, -1)">-</button>
+              </div>
+              <p>New Quantity: <span id="new-quantity-${index}">${product.newQuantity}</span></p>
+            `;
+            productsDiv.appendChild(productEl);
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        document.getElementById('products').innerHTML = "<p>Error loading products.</p>";
+      }
+    }
+
+    // Adjust Quantity Logic
+    async function adjustQuantity(index, delta) {
+      try {
+        const response = await fetch(BUCKET_URL);
+        if (!response.ok) throw new Error("Failed to fetch products.json.");
+
+        const products = await response.json();
+        const product = products[index];
+        product.newQuantity = Math.max(0, Math.min(50, product.newQuantity + delta)); // Limit to range 0-50
+        document.getElementById(`new-quantity-${index}`).textContent = product.newQuantity;
+
+        // Save the updated products back to S3
+        const putResponse = await fetch(BUCKET_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(products),
+        });
+
+        if (!putResponse.ok) {
+          throw new Error("Failed to update products.json.");
+        }
+
+        console.log(`Updated newQuantity for product ${product.name} to ${product.newQuantity}`);
+      } catch (error) {
+        console.error('Failed to update newQuantity:', error);
+        alert("An error occurred while updating quantities.");
+      }
+    }
+
+    // Countdown Timer Synchronization with Polling for Updates
+    function startCountdown() {
+      const countdownEl = document.getElementById('countdown');
+      const now = new Date();
+
+      // Calculate next EventBridge trigger time (every 2 minutes)
+      const nextUpdateTime = new Date(Math.ceil(now.getTime() / (EVENTBRIDGE_INTERVAL_MINUTES * 60 * 1000)) * (EVENTBRIDGE_INTERVAL_MINUTES * 60 * 1000));
+
+      function updateTimer() {
+        const currentTime = new Date();
+        const remainingTime = Math.max(nextUpdateTime - currentTime, 0);
+        const minutes = Math.floor(remainingTime / 60000);
+        const seconds = Math.floor((remainingTime % 60000) / 1000);
+        countdownEl.textContent = `${minutes}m ${seconds}s`;
+
+        if (remainingTime <= 0) {
+          // Instead of refreshing, check for EventBridge updates
+          fetchProducts(true);
+        }
+      }
+
+      setInterval(updateTimer, 1000); // Update countdown every second
+      updateTimer(); // Initial call
+    }
+
+    // Initialize the Page
+    fetchProducts(); // Initial fetch
+    startCountdown(); // Start the countdown timer
+  </script>
+</body>
+</html>

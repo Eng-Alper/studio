@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Server",
+    "description": "High-performance rack server.",
+    "stock": 4,
+    "newQuantity": 4
+  },
+  {
+    "name": "Network Cabinet",
+    "description": "19-inch standard rack cabinet.",
+    "stock": 1,
+    "newQuantity": 1
+  },
+  {
+    "name": "Router",
+    "description": "High-speed enterprise router.",
+    "stock": 8,
+    "newQuantity": 8
+  },
+  {
+    "name": "Switch",
+    "description": "Layer 3 network switch.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Patch Panel",
+    "description": "24-port patch panel for structured cabling.",
+    "stock": 8,
+    "newQuantity": 8
+  },
+  {
+    "name": "Access Point",
+    "description": "Dual-band Wi-Fi 6 access point.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Firewall",
+    "description": "Enterprise security firewall.",
+    "stock": 16,
+    "newQuantity": 16
+  },
+  {
+    "name": "NAS Storage",
+    "description": "8-bay network-attached storage.",
+    "stock": 8,
+    "newQuantity": 8
+  },
+  {
+    "name": "UPS",
+    "description": "Uninterruptible power supply.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Fiber Optic Cable",
+    "description": "Single-mode fiber optic cable.",
+    "stock": 15,
+    "newQuantity": 15
+  },
+  {
+    "name": "Ethernet Cable",
+    "description": "Cat 6a Ethernet cable.",
+    "stock": 85,
+    "newQuantity": 85
+  },
+  {
+    "name": "KVM Switch",
+    "description": "4-port KVM switch for rack servers.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Network Card",
+    "description": "10Gb Ethernet network card.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Media Converter",
+    "description": "Gigabit Ethernet to fiber media converter.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "IP Camera",
+    "description": "PoE-enabled IP surveillance camera.",
+    "stock": 22,
+    "newQuantity": 22
+  },
+  {
+    "name": "Load Balancer",
+    "description": "Application load balancer.",
+    "stock": 2,
+    "newQuantity": 2
+  },
+  {
+    "name": "SFP Transceiver",
+    "description": "Gigabit SFP module.",
+    "stock": 40,
+    "newQuantity": 40
+  },
+  {
+    "name": "Patch Cord",
+    "description": "Short Ethernet patch cord.",
+    "stock": 47,
+    "newQuantity": 47
+  },
+  {
+    "name": "PoE Injector",
+    "description": "Power over Ethernet injector.",
+    "stock": 14,
+    "newQuantity": 14
+  },
+  {
+    "name": "Signal Booster",
+    "description": "Wi-Fi range extender.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Rack Mount PDU",
+    "description": "Power distribution unit for racks.",
+    "stock": 2,
+    "newQuantity": 2
+  },
+  {
+    "name": "Cable Management Tray",
+    "description": "Horizontal rack cable manager.",
+    "stock": 26,
+    "newQuantity": 26
+  },
+  {
+    "name": "DAC Cable",
+    "description": "10Gb direct attach copper cable.",
+    "stock": 11,
+    "newQuantity": 11
+  },
+  {
+    "name": "Antennas",
+    "description": "High-gain Wi-Fi antennas.",
+    "stock": 30,
+    "newQuantity": 30
+  },
+  {
+    "name": "Cooling Fan",
+    "description": "Rack-mounted cooling fan.",
+    "stock": 30,
+    "newQuantity": 30
+  },
+  {
+    "name": "Transceiver Tester",
+    "description": "Handheld SFP transceiver tester.",
+    "stock": 0,
+    "newQuantity": 0
+  },
+  {
+    "name": "Wi-Fi Controller",
+    "description": "Centralized Wi-Fi controller.",
+    "stock": 7,
+    "newQuantity": 7
+  },
+  {
+    "name": "Cable Tester",
+    "description": "Ethernet cable tester.",
+    "stock": 4,
+    "newQuantity": 4
+  },
+  {
+    "name": "Surge Protector",
+    "description": "Rack surge protector.",
+    "stock": 17,
+    "newQuantity": 17
+  },
+  {
+    "name": "Monitoring Probe",
+    "description": "Network performance monitoring probe.",
+    "stock": 0,
+    "newQuantity": 0
+  }
+]

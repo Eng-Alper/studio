@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -18,7 +17,11 @@ const InventoryPage: React.FC = () => {
     { id: "1", name: "Example Item", description: "This is an example item.", stock: 10 },
   ]);
 
-  const handleAddItem = (item: Omit<InventoryItem, 'id'>) => {
+  const handleAddItem = (values: { name: string; initialStock: number; description?: string }) => {
+    const item: Omit<InventoryItem, "id"> = {
+      ...values,
+      stock: values.initialStock, // Map `initialStock` to `stock`.
+    };
     setInventory([...inventory, { ...item, id: String(Date.now()) }]);
   };
 
